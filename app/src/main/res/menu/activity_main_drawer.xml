@@ -14,6 +14,10 @@
             android:id="@+id/nav_players"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Hráči" />
+        <item
+            android:id="@+id/nav_stat"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Statistika her"/>
     </group>
 
 </menu>
