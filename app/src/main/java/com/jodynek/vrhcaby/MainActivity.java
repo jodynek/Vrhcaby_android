@@ -1,8 +1,10 @@
 package com.jodynek.vrhcaby;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,8 +15,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.squareup.timessquare.CalendarPickerView;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private CalendarPickerView calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +47,49 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        initializeCalendar();
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
+    public void initializeCalendar() {
+        Calendar nextYear = Calendar.getInstance();
+        nextYear.add(Calendar.YEAR, 1);
+        Calendar prevYear = Calendar.getInstance();
+        prevYear.add(Calendar.YEAR, -1);
+
+        calendar = (CalendarPickerView) findViewById(R.id.calendar);
+        Date today = new Date();
+        calendar.init(prevYear.getTime(), nextYear.getTime()).inMode(CalendarPickerView.SelectionMode.MULTIPLE)
+                .withSelectedDate(today);
+        calendar.setOnDateSelectedListener(new CalendarPickerView.OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(Date date) {
+                SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+                String sDatum = dateformat.format(date.getTime());
+                calendar.selectDate(date);
+                Log.d("Selected DATUM", sDatum);
+                // zobraz zaznamy pro vybrane datum
+//                Intent intentRecordList = new Intent(MainActivity.this, RecordListActivity.class);
+//                intentRecordList.putExtra("Date", sDatum);
+//                startActivityForResult(intentRecordList, REQUEST_FROM_INSERTUPDATE);
+            }
+
+            @Override
+            public void onDateUnselected(Date date) {
+                SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+                String sDatum = dateformat.format(date.getTime());
+                Log.d("Unselected DATUM", sDatum);
+                calendar.selectDate(date);
+                // zobraz zaznamy pro vybrane datum
+//                Intent intentRecordList = new Intent(MainActivity.this, RecordListActivity.class);
+//                intentRecordList.putExtra("Date", sDatum);
+//                startActivityForResult(intentRecordList, REQUEST_FROM_INSERTUPDATE);
+            }
+        });
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -80,20 +129,13 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_newgame) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_games) {
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_players) {
 
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
